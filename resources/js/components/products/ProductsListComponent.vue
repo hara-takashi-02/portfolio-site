@@ -40,7 +40,13 @@
 
           <button
             class="c-icoBtn c-icoBtn--d"
+            v-if="auth_type == 0"
             v-on:click="deleteProduct(product.id)"
+          ></button>
+          <button
+            class="c-icoBtn c-icoBtn--d"
+            v-else
+            v-on:click="messegeEvent('show only！', 1)"
           ></button>
         </div>
         <div class="c-item image">
@@ -75,6 +81,7 @@ import draggable from "vuedraggable";
 export default {
   components: { draggable },
   props: ["products"],
+  props: ["auth_type"],
 
   data: function () {
     return {
@@ -96,11 +103,11 @@ export default {
         .then((res) => {
           this.productsNew = res.data;
           console.log("成功");
-          console.log(res);
+          //console.log(res);
         })
         .catch((error) => {
           console.log("失敗");
-          console.log(error);
+          //console.log(error);
         });
     },
 
@@ -111,51 +118,51 @@ export default {
         .then((res) => {
           this.getProducts();
           console.log("成功");
-          console.log(res);
-          this.message = "UPDATE！";
-          this.view = !this.view;
-          setTimeout(() => {
-            this.view = false;
-          }, 800);
+          //console.log(res);
+          this.messegeEvent("UPDATE！", 0);
         })
         .catch((error) => {
           console.log("失敗");
-          console.log(error);
-          this.message = "ERROR！";
-          this.view_err = !this.view_err;
-          setTimeout(() => {
-            this.view_err = false;
-          }, 800);
+          //console.log(error);
+          this.messegeEvent("ERROR！", 1);
         });
     },
 
     //並び替え
     endSort_products(event) {
-      this.productsNew.map((product, index) => {
-        product.order = index + 1;
-      });
-      axios
-        .put("/api/product/", {
-          products: this.productsNew,
-        })
-        .then((res) => {
-          console.log("成功");
-          console.log(res);
-          this.message = "UPDATE！";
-          this.view = !this.view;
-          setTimeout(() => {
-            this.view = false;
-          }, 800);
-        })
-        .catch((error) => {
-          console.log("失敗");
-          console.log(error);
-          this.message = "ERROR！";
-          this.view_err = !this.view_err;
-          setTimeout(() => {
-            this.view_err = false;
-          }, 800);
+      if (this.auth_type == 0) {
+        this.productsNew.map((product, index) => {
+          product.order = index + 1;
         });
+        axios
+          .put("/api/product/", {
+            products: this.productsNew,
+          })
+          .then((res) => {
+            console.log("成功");
+            //console.log(res);
+            this.messegeEvent("UPDATE！", 0);
+          })
+          .catch((error) => {
+            console.log("失敗");
+            //console.log(error);
+            this.messegeEvent("ERROR！", 1);
+          });
+      } else {
+        this.messegeEvent("show only！", 1);
+      }
+    },
+    messegeEvent(m, v) {
+      this.message = m;
+      if (v == 0) {
+        this.view = !this.view;
+      } else {
+        this.view_err = !this.view_err;
+      }
+      setTimeout(() => {
+        this.view = false;
+        this.view_err = false;
+      }, 800);
     },
   },
 

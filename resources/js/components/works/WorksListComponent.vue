@@ -36,13 +36,18 @@
 
           <button
             class="c-icoBtn c-icoBtn--d"
+            v-if="auth_type == 0"
             v-on:click="deleteWork(work.id)"
+          ></button>
+          <button
+            class="c-icoBtn c-icoBtn--d"
+            v-else
+            v-on:click="messegeEvent('show only！', 1)"
           ></button>
         </div>
         <div class="c-item image">
           <p class="subItemTitle">IMAGE</p>
           <p class="subItemTxt">
-            
             <img
               v-if="work.file_path"
               :src="'/storage/' + work.file_path"
@@ -84,7 +89,13 @@
           </button>
           <button
             class="c-icoBtn c-icoBtn--d"
+            v-if="auth_type == 0"
             v-on:click="deleteWork(work.id)"
+          ></button>
+          <button
+            class="c-icoBtn c-icoBtn--d"
+            v-else
+            v-on:click="messegeEvent('show only！', 1)"
           ></button>
         </div>
         <div class="c-item title">
@@ -106,6 +117,7 @@ import draggable from "vuedraggable";
 export default {
   components: { draggable },
   props: ["works"],
+  props: ["auth_type"],
 
   data: function () {
     return {
@@ -131,12 +143,12 @@ export default {
           //this.worksNew = res.data;
           this.worksNew = res.data.filter((work) => work.type == 0);
           this.worksNew2 = res.data.filter((work) => work.type == 1);
-          console.log("成功");
-          console.log(res);
+          console.log("成功work");
+          //console.log(res.data);
         })
         .catch((error) => {
           console.log("失敗");
-          console.log(error);
+          //console.log(error);
         });
     },
 
@@ -147,64 +159,59 @@ export default {
         .then((res) => {
           this.getWorks();
           console.log("成功");
-          console.log(res);
-          this.message = "UPDATE！";
-          this.view = !this.view;
-          setTimeout(() => {
-            this.view = false;
-          }, 800);
+          this.messegeEvent('UPDATE！', 0);
         })
         .catch((error) => {
           console.log("失敗");
-          console.log(error);
-          this.message = "ERROR！";
-          this.view_err = !this.view_err;
-          setTimeout(() => {
-            this.view_err = false;
-          }, 800);
+          this.messegeEvent('ERROR！', 1);
         });
     },
 
     //並び替え
     endSort_works(event) {
-      //console.log(event.from._prevClass);
-      this.class = event.from._prevClass;
-      if (this.class.match(/main/)) {
-        //console.log("メインです");
-        this.worksNew.map((work, index) => {
-          work.order = index + 1;
-        });
-        this.worksNew3 = this.worksNew;
-      } else {
-        //console.log("サブです");
-        this.worksNew2.map((work, index) => {
-          work.order = index + 1;
-        });
-        this.worksNew3 = this.worksNew2;
-      }
+      if (this.auth_type == 0) {
+        this.class = event.from._prevClass;
+        if (this.class.match(/main/)) {
+          this.worksNew.map((work, index) => {
+            work.order = index + 1;
+          });
+          this.worksNew3 = this.worksNew;
+        } else {
+          this.worksNew2.map((work, index) => {
+            work.order = index + 1;
+          });
+          this.worksNew3 = this.worksNew2;
+        }
 
-      axios
-        .put("/api/work/", {
-          works: this.worksNew3,
-        })
-        .then((res) => {
-          console.log("成功");
-          console.log(res);
-          this.message = "UPDATE！";
-          this.view = !this.view;
-          setTimeout(() => {
-            this.view = false;
-          }, 800);
-        })
-        .catch((error) => {
-          console.log("失敗");
-          console.log(error);
-          this.message = "ERROR！";
-          this.view_err = !this.view_err;
-          setTimeout(() => {
-            this.view_err = false;
-          }, 800);
-        });
+        axios
+          .put("/api/work/", {
+            works: this.worksNew3,
+          })
+          .then((res) => {
+            console.log("成功");
+            //console.log(res);
+            this.messegeEvent('UPDATE！', 0);
+          })
+          .catch((error) => {
+            console.log("失敗");
+            //console.log(error);
+            this.messegeEvent('ERROR！', 1);
+          });
+      } else {
+        this.messegeEvent('show only！', 1);
+      }
+    },
+    messegeEvent(m, v) {
+      this.message = m;
+      if (v == 0) {
+        this.view = !this.view;
+      } else {
+        this.view_err = !this.view_err;
+      }
+      setTimeout(() => {
+        this.view = false;
+        this.view_err = false;
+      }, 800);
     },
   },
 
@@ -212,6 +219,5 @@ export default {
   mounted() {
     this.getWorks();
   },
-
 };
 </script>

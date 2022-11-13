@@ -4,7 +4,6 @@
 
     <div class="c-form">
       <form v-on:submit.prevent="submit">
-
         <div class="c-input">
           <label for="title" class="">
             <p>TITLE</p>
@@ -26,11 +25,16 @@
           </label>
         </div>
 
-        <p v-if="validation" class="error">{{ validation }}</p>
-        <button v-if="!validation" type="submit" class="c-btn c-btn--submit">
+        <p v-if="validation" class="error">
+          {{ validation }}
+        </p>
+        <button v-if="auth_type != 0" class="c-btn c-btn--submit" disabled>
+          show only
+        </button>
+        <button v-else-if="validation" class="c-btn c-btn--submit" disabled>
           SUBMIT
         </button>
-
+        <button v-else-if="!validation" type="submit" class="c-btn c-btn--submit">SUBMIT</button>
       </form>
     </div>
   </div>
@@ -46,6 +50,7 @@ export default {
       url: "",
     };
   },
+  props: ["auth_type"],
 
   computed: {
     validation: function () {
@@ -75,12 +80,12 @@ export default {
         .post("/api/product", data2, config)
         .then((res) => {
           console.log("成功 ");
-          console.log(res);
+          //console.log(res);
           this.$router.push({ name: "task.list" });
         })
         .catch(function (error) {
           console.log("失敗");
-          console.log(error);
+          //console.log(error);
         });
     },
   },

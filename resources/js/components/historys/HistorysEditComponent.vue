@@ -1,6 +1,5 @@
 <template>
   <div class="c-widset c-section">
-
     <div class="c-section--head"><h2 class="c-title">HISTORY</h2></div>
 
     <div class="c-form">
@@ -21,14 +20,28 @@
         <div class="c-input">
           <label for="age_st" class="">
             <p>AGE_START</p>
-            <input type="number" step="1" max="100" class="" id="age_st" v-model="history.age_st" />
+            <input
+              type="number"
+              step="1"
+              max="100"
+              class=""
+              id="age_st"
+              v-model="history.age_st"
+            />
           </label>
         </div>
 
         <div class="c-input">
           <label for="age_ed" class="">
             <p>AGE_END</p>
-            <input type="number" step="1" max="100" class="" id="age_ed" v-model="history.age_ed" />
+            <input
+              type="number"
+              step="1"
+              max="100"
+              class=""
+              id="age_ed"
+              v-model="history.age_ed"
+            />
           </label>
         </div>
 
@@ -58,14 +71,13 @@
         </div>
 
         <p v-if="validation" class="error">{{ validation }}</p>
-        <button
-          v-if="!validation"
-          type="submit"
-          class="c-btn c-btn--submit"
-          @click="displayUpdate(history)"
-        >
+        <button v-if="auth_type != 0" class="c-btn c-btn--submit" disabled>
+          show only
+        </button>
+        <button v-else-if="validation" class="c-btn c-btn--submit" disabled>
           SUBMIT
         </button>
+        <button @click="displayUpdate(history)" v-else-if="!validation" type="submit" class="c-btn c-btn--submit">SUBMIT</button>
       </form>
     </div>
   </div>
@@ -75,6 +87,7 @@
 export default {
   props: {
     historyId: [String, Number],
+    auth_type: [],
   },
 
   data: function () {
@@ -104,12 +117,12 @@ export default {
         .then((res) => {
           this.history = res.data;
           console.log("成功 ");
-          console.log(res);
+          //console.log(res);
           this.loading = false; //ロード終了
         })
         .catch(function (error) {
           console.log("失敗");
-          console.log(error);
+          //console.log(error);
         });
     },
 
@@ -143,14 +156,19 @@ export default {
         .post("/api/history/" + this.historyId, data2, config)
         .then((res) => {
           console.log("成功 ");
-          console.log(res);
-          this.$router.push({ name: "task.list",query: { modal: "opened" }, },undefined,{ scroll: false });
+          //console.log(res);
+          this.$router.push(
+            { name: "task.list", query: { modal: "opened" } },
+            undefined,
+            { scroll: false }
+          );
         })
         .catch(function (error) {
           console.log("失敗");
-          console.log(error);
+          //console.log(error);
         });
     },
+
   },
 
   mounted() {

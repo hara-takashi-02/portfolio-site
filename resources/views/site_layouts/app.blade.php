@@ -10,7 +10,7 @@ homeベース
 @if (Route::has('login'))
 <div class="c-info">
 @auth
-<a href="{{ url('/home') }}" class="">NOME</a>
+<a href="{{ url('/home') }}" class="">HOME</a>
 @else
 <a href="{{ route('login') }}" class="">LOGIN</a>
 @if (Route::has('register'))
@@ -25,7 +25,7 @@ homeベース
 @yield('header_site')
 @yield('content_site')
 <!-- topに戻る -->
-<div class="c-widset pageTopWrap">
+<div class="pageTopWrap">
 <div class="pageTop js_backtop">
 </div>
 </div>

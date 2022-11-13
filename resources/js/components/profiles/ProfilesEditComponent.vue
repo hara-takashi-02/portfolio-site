@@ -41,7 +41,12 @@
         <div class="c-input">
           <label for="school" class="">
             <p>SCHOOL</p>
-            <textarea type="text" class="" id="school" v-model="profile.school" />
+            <textarea
+              type="text"
+              class=""
+              id="school"
+              v-model="profile.school"
+            />
           </label>
         </div>
 
@@ -53,14 +58,13 @@
         </div>
 
         <p v-if="validation" class="error">{{ validation }}</p>
-        <button
-          v-if="!validation"
-          type="submit"
-          class="c-btn c-btn--submit"
-          @click="displayUpdate(profile)"
-        >
+        <button v-if="auth_type != 0" class="c-btn c-btn--submit" disabled>
+          show only
+        </button>
+        <button v-else-if="validation" class="c-btn c-btn--submit" disabled>
           SUBMIT
         </button>
+        <button @click="displayUpdate(profile)" v-else-if="!validation" type="submit" class="c-btn c-btn--submit">SUBMIT</button>
       </form>
     </div>
   </div>
@@ -70,6 +74,7 @@
 export default {
   props: {
     profileId: [String, Number],
+    auth_type: [],
   },
 
   data: function () {
@@ -87,7 +92,7 @@ export default {
   computed: {
     validation: function () {
       if (!this.profile.myname) {
-        return "タイトルは必須です";
+        return "名前は必須です";
       }
       return "";
     },
@@ -100,12 +105,12 @@ export default {
         .then((res) => {
           this.profile = res.data;
           console.log("成功 ");
-          console.log(res);
+          //console.log(res);
           this.loading = false; //ロード終了
         })
         .catch(function (error) {
           console.log("失敗");
-          console.log(error);
+          //console.log(error);
         });
     },
 
@@ -140,14 +145,15 @@ export default {
         .post("/api/profile/" + this.profileId, data2, config)
         .then((res) => {
           console.log("成功 ");
-          console.log(res);
+          //console.log(res);
           this.$router.push({ name: "task.list" });
         })
         .catch(function (error) {
           console.log("失敗");
-          console.log(error);
+          //console.log(error);
         });
     },
+
   },
 
   mounted() {

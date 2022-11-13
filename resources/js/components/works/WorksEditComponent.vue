@@ -1,6 +1,5 @@
 <template>
   <div class="c-widset c-section">
-
     <div class="c-section--head"><h2 class="c-title">WORKS</h2></div>
 
     <div class="c-form">
@@ -28,7 +27,12 @@
         <div class="c-textarea" v-else-if="work.type === 1">
           <label for="free_txt" class="">
             <p>FREE TEXT</p>
-            <textarea name="editor" class="ckeditor" id="free_txt" v-model="work.free_txt"/>
+            <textarea
+              name="editor"
+              class="ckeditor"
+              id="free_txt"
+              v-model="work.free_txt"
+            />
           </label>
         </div>
 
@@ -51,14 +55,14 @@
         </div>
 
         <p v-if="validation" class="error">{{ validation }}</p>
-        <button
-          v-if="!validation"
-          type="submit"
-          class="c-btn c-btn--submit"
-          @click="displayUpdate(work)"
-        >
+
+        <button v-if="auth_type != 0" class="c-btn c-btn--submit" disabled>
+          show only
+        </button>
+        <button v-else-if="validation" class="c-btn c-btn--submit" disabled>
           SUBMIT
         </button>
+        <button @click="displayUpdate(work)" v-else-if="!validation" type="submit" class="c-btn c-btn--submit">SUBMIT</button>
       </form>
     </div>
   </div>
@@ -68,6 +72,7 @@
 export default {
   props: {
     workId: [String, Number],
+    auth_type: [],
   },
 
   data: function () {
@@ -77,6 +82,7 @@ export default {
       content: "",
       free_txt: "",
       loading: true, //ロード開始
+      isTestDisabled: false,
     };
   },
 
@@ -102,12 +108,12 @@ export default {
         .then((res) => {
           this.work = res.data;
           console.log("成功 ");
-          console.log(res);
+          //console.log(res);
           this.loading = false; //ロード終了
         })
         .catch(function (error) {
           console.log("失敗");
-          console.log(error);
+          //console.log(error);
         });
     },
 
@@ -146,12 +152,12 @@ export default {
         .post("/api/work/" + this.workId, data2, config)
         .then((res) => {
           console.log("成功 ");
-          console.log(res);
+          //console.log(res);
           this.$router.push({ name: "task.list" });
         })
         .catch(function (error) {
           console.log("失敗");
-          console.log(error);
+          //console.log(error);
         });
     },
   },

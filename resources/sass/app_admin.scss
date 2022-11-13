@@ -213,8 +213,8 @@
     top: 0;
     left: -100%;
     background: #fff;
-    -webkit-transition: 0.7s;
-    transition: 0.7s;
+    -webkit-transition: 0.4s;
+    transition: 0.4s;
 }
 
 @media screen and (min-width: 768px) {
@@ -226,8 +226,8 @@
 
 .c-burgerMenu.open {
     left: 0;
-    -webkit-transition: 0.7s;
-    transition: 0.7s;
+    -webkit-transition: 0.4s;
+    transition: 0.4s;
 }
 
 .c-burgerMenu-inner {
@@ -2110,6 +2110,9 @@ admin
 /* history */
 .adminHistorys .image img{
     padding: 0;
+}
+.adminHistorys .subItemTxt{
+    white-space: initial;
 }
 
 @media screen and (min-width: 1000px) {

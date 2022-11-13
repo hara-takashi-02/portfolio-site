@@ -173,5 +173,12 @@ Vue.component('view-component', viewComponent);
 
 const app = new Vue({
     el: '#app',
-    router
+    router,
+    /*scrollBehavior(to) {
+        if (to.hash) {
+          return { el: to.hash };
+        } else {
+          return { top: 0 };
+        }
+      }*/
 });

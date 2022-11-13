@@ -40,7 +40,13 @@
           </button>
           <button
             class="c-icoBtn c-icoBtn--d"
+            v-if="auth_type == 0"
             v-on:click="deleteSkill(skill.id)"
+          ></button>
+          <button
+            class="c-icoBtn c-icoBtn--d"
+            v-else
+            v-on:click="messegeEvent('show only！', 1)"
           ></button>
         </div>
         <div class="u-flex">
@@ -50,7 +56,7 @@
           </div>
         </div>
         <div class="meter">
-          <p :style="('width: ' + skill.meter + '%')">{{ skill.title }}</p>
+          <p :style="'width: ' + skill.meter + '%'">{{ skill.title }}</p>
         </div>
       </li>
     </draggable>
@@ -78,7 +84,13 @@
           </button>
           <button
             class="c-icoBtn c-icoBtn--d"
+            v-if="auth_type == 0"
             v-on:click="deleteSkill(skill.id)"
+          ></button>
+          <button
+            class="c-icoBtn c-icoBtn--d"
+            v-else
+            v-on:click="messegeEvent('show only！', 1)"
           ></button>
         </div>
         <div class="u-flex">
@@ -88,7 +100,7 @@
           </div>
         </div>
         <div class="meter">
-          <p :style="('width: ' + skill.meter + '%')">{{ skill.title }}</p>
+          <p :style="'width: ' + skill.meter + '%'">{{ skill.title }}</p>
         </div>
       </li>
     </draggable>
@@ -116,7 +128,13 @@
           </button>
           <button
             class="c-icoBtn c-icoBtn--d"
+            v-if="auth_type == 0"
             v-on:click="deleteSkill(skill.id)"
+          ></button>
+          <button
+            class="c-icoBtn c-icoBtn--d"
+            v-else
+            v-on:click="messegeEvent('show only！', 1)"
           ></button>
         </div>
         <div class="u-flex">
@@ -126,11 +144,10 @@
           </div>
         </div>
         <div class="meter">
-          <p :style="('width: ' + skill.meter + '%')">{{ skill.title }}</p>
+          <p :style="'width: ' + skill.meter + '%'">{{ skill.title }}</p>
         </div>
       </li>
     </draggable>
-
   </section>
 </template>
 
@@ -140,6 +157,7 @@ import draggable from "vuedraggable";
 export default {
   components: { draggable },
   props: ["skills"],
+  props: ["auth_type"],
 
   data: function () {
     return {
@@ -164,17 +182,17 @@ export default {
         .get("/api/skill")
         .then((res) => {
           //this.skillsNew = res.data;
-          
+
           this.skillsNew = res.data.filter((skill) => skill.type == 0);
           this.skillsNew2 = res.data.filter((skill) => skill.type == 1);
           this.skillsNew3 = res.data.filter((skill) => skill.type == 2);
 
           console.log("成功");
-          console.log(res);
+          //console.log(res);
         })
         .catch((error) => {
           console.log("失敗");
-          console.log(error);
+          //console.log(error);
         });
     },
 
@@ -185,70 +203,66 @@ export default {
         .then((res) => {
           this.getSkills();
           console.log("成功");
-          console.log(res);
-          this.message = "UPDATE！";
-          this.view = !this.view;
-          setTimeout(() => {
-            this.view = false;
-          }, 800);
+          //console.log(res);
+          this.messegeEvent("UPDATE！", 0);
         })
         .catch((error) => {
           console.log("失敗");
-          console.log(error);
-          this.message = "ERROR！";
-          this.view_err = !this.view_err;
-          setTimeout(() => {
-            this.view_err = false;
-          }, 800);
+          //console.log(error);
+          this.messegeEvent("ERROR！", 1);
         });
     },
 
     //並び替え
     endSort_skills(event) {
-      //console.log(event.from._prevClass);
-      this.class = event.from._prevClass;
-      if (this.class.match(/back/)) {
-        //console.log("メインです");
-        this.skillsNew.map((skill, index) => {
-          skill.order = index + 1;
-        });
-        this.skillsNewLast = this.skillsNew;
-      } else if(this.class.match(/front/)) {
-        //console.log("サブです");
-        this.skillsNew2.map((skill, index) => {
-          skill.order = index + 1;
-        });
-        this.skillsNewLast = this.skillsNew2;
-      } else {
-        //console.log("サブです");
-        this.skillsNew3.map((skill, index) => {
-          skill.order = index + 1;
-        });
-        this.skillsNewLast = this.skillsNew3;
-      }
+      if (this.auth_type == 0) {
+        this.class = event.from._prevClass;
+        if (this.class.match(/back/)) {
+          this.skillsNew.map((skill, index) => {
+            skill.order = index + 1;
+          });
+          this.skillsNewLast = this.skillsNew;
+        } else if (this.class.match(/front/)) {
+          this.skillsNew2.map((skill, index) => {
+            skill.order = index + 1;
+          });
+          this.skillsNewLast = this.skillsNew2;
+        } else {
+          this.skillsNew3.map((skill, index) => {
+            skill.order = index + 1;
+          });
+          this.skillsNewLast = this.skillsNew3;
+        }
 
-      axios
-        .put("/api/skill/", {
-          skills: this.skillsNewLast,
-        })
-        .then((res) => {
-          console.log("成功");
-          console.log(res);
-          this.message = "UPDATE！";
-          this.view = !this.view;
-          setTimeout(() => {
-            this.view = false;
-          }, 800);
-        })
-        .catch((error) => {
-          console.log("失敗");
-          console.log(error);
-          this.message = "ERROR！";
-          this.view_err = !this.view_err;
-          setTimeout(() => {
-            this.view_err = false;
-          }, 800);
-        });
+        axios
+          .put("/api/skill/", {
+            skills: this.skillsNewLast,
+          })
+          .then((res) => {
+            console.log("成功");
+            //console.log(res);
+            this.messegeEvent("UPDATE！", 0);
+          })
+          .catch((error) => {
+            console.log("失敗");
+            //console.log(error);
+            this.messegeEvent("ERROR！", 1);
+          });
+      } else {
+        this.messegeEvent("show only！", 1);
+      }
+    },
+    messegeEvent(m, v) {
+      this.message = m;
+      if (v == 0) {
+        this.view = !this.view;
+      } else {
+        this.view_err = !this.view_err;
+      }
+      setTimeout(() => {
+        this.view = false;
+        this.view_err = false;
+      }, 800);
     },
   },
 
@@ -256,6 +270,5 @@ export default {
   mounted() {
     this.getSkills();
   },
-
 };
 </script>

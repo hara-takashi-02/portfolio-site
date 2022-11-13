@@ -29,26 +29,37 @@
         <div class="c-input">
           <label for="title" class="">
             <p>TITLE</p>
-            <input type="text" class="" id="title" v-model="skill.title" />
+            <input
+              type="text"
+              class=""
+              id="title"
+              v-model="skill.title"
+            />
           </label>
         </div>
 
         <div class="c-input">
           <label for="meter" class="">
             <p>METER</p>
-            <input type="number" step="5" max="100" class="" id="meter" v-model="skill.meter" />
+            <input
+              type="number"
+              step="5"
+              max="100"
+              class=""
+              id="meter"
+              v-model="skill.meter"
+            />
           </label>
         </div>
 
         <p v-if="validation" class="error">{{ validation }}</p>
-        <button
-          v-if="!validation"
-          type="submit"
-          class="c-btn c-btn--submit"
-          @click="displayUpdate(skill)"
-        >
+        <button v-if="auth_type != 0" class="c-btn c-btn--submit" disabled>
+          show only
+        </button>
+        <button v-else-if="validation" class="c-btn c-btn--submit" disabled>
           SUBMIT
         </button>
+        <button @click="displayUpdate(skill)" v-else-if="!validation" type="submit" class="c-btn c-btn--submit">SUBMIT</button>
       </form>
     </div>
   </div>
@@ -58,6 +69,7 @@
 export default {
   props: {
     skillId: [String, Number],
+    auth_type: [],
   },
 
   data: function () {
@@ -85,12 +97,12 @@ export default {
         .then((res) => {
           this.skill = res.data;
           console.log("成功 ");
-          console.log(res);
+          //console.log(res);
           this.loading = false; //ロード終了
         })
         .catch(function (error) {
           console.log("失敗");
-          console.log(error);
+          //console.log(error);
         });
     },
 
@@ -117,14 +129,15 @@ export default {
         .post("/api/skill/" + this.skillId, data2, config)
         .then((res) => {
           console.log("成功 ");
-          console.log(res);
+          //console.log(res);
           this.$router.push({ name: "task.list" });
         })
         .catch(function (error) {
           console.log("失敗");
-          console.log(error);
+          //console.log(error);
         });
     },
+
   },
 
   mounted() {

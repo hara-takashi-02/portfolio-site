@@ -4,22 +4,21 @@
 
     <div class="c-form">
       <form v-on:submit.prevent="submit">
-
-          <div class="c-radio">
-            <p>TYPE</p>
-            <label for="1">
-              <input type="radio" id="1" v-model="type" value="0" />
-              <span>BACKEND</span>
-            </label>
-            <label for="2">
-              <input type="radio" id="2" v-model="type" value="1" />
-              <span>FRONTEND</span>
-            </label>
-            <label for="3">
-              <input type="radio" id="3" v-model="type" value="2" />
-              <span>OTHER</span>
-            </label>
-          </div>
+        <div class="c-radio">
+          <p>TYPE</p>
+          <label for="1">
+            <input type="radio" id="1" v-model="type" value="0" />
+            <span>BACKEND</span>
+          </label>
+          <label for="2">
+            <input type="radio" id="2" v-model="type" value="1" />
+            <span>FRONTEND</span>
+          </label>
+          <label for="3">
+            <input type="radio" id="3" v-model="type" value="2" />
+            <span>OTHER</span>
+          </label>
+        </div>
 
         <div class="c-input">
           <label for="title" class="">
@@ -31,15 +30,27 @@
         <div class="c-input">
           <label for="meter" class="">
             <p>METER</p>
-            <input type="number" step="5" max="100" class="" id="meter" v-model="meter" />
+            <input
+              type="number"
+              step="5"
+              max="100"
+              class=""
+              id="meter"
+              v-model="meter"
+            />
           </label>
         </div>
 
-        <p v-if="validation" class="error">{{ validation }}</p>
-        <button v-if="!validation" type="submit" class="c-btn c-btn--submit">
+        <p v-if="validation" class="error">
+          {{ validation }}
+        </p>
+        <button v-if="auth_type != 0" class="c-btn c-btn--submit" disabled>
+          show only
+        </button>
+        <button v-else-if="validation" class="c-btn c-btn--submit" disabled>
           SUBMIT
         </button>
-
+        <button v-else-if="!validation" type="submit" class="c-btn c-btn--submit">SUBMIT</button>
       </form>
     </div>
   </div>
@@ -55,11 +66,15 @@ export default {
       meter: "0",
     };
   },
+  props: ["auth_type"],
 
   computed: {
     validation: function () {
       if (!this.type) {
         return "投稿タイプは必須です";
+      }
+      if (!this.title) {
+        return "タイトルは必須です";
       }
       return "";
     },
@@ -89,6 +104,7 @@ export default {
           console.log(error);
         });
     },
+
   },
 };
 </script>

@@ -4,7 +4,6 @@
 
     <div class="c-form">
       <form v-on:submit.prevent="submit">
-
         <div class="c-input">
           <label for="title" class="">
             <p>TITLE</p>
@@ -22,14 +21,28 @@
         <div class="c-input">
           <label for="age_st" class="">
             <p>AGE_START</p>
-            <input type="number" step="1" max="100" class="" id="age_st" v-model="age_st" />
+            <input
+              type="number"
+              step="1"
+              max="100"
+              class=""
+              id="age_st"
+              v-model="age_st"
+            />
           </label>
         </div>
 
         <div class="c-input">
           <label for="age_ed" class="">
             <p>AGE_END</p>
-            <input type="number" step="1" max="100" class="" id="age_ed" v-model="age_ed" />
+            <input
+              type="number"
+              step="1"
+              max="100"
+              class=""
+              id="age_ed"
+              v-model="age_ed"
+            />
           </label>
         </div>
 
@@ -41,10 +54,13 @@
         </div>
 
         <p v-if="validation" class="error">{{ validation }}</p>
-        <button v-if="!validation" type="submit" class="c-btn c-btn--submit">
+        <button v-if="auth_type != 0" class="c-btn c-btn--submit" disabled>
+          show only
+        </button>
+        <button v-else-if="validation" class="c-btn c-btn--submit" disabled>
           SUBMIT
         </button>
-
+        <button v-else-if="!validation" type="submit" class="c-btn c-btn--submit">SUBMIT</button>
       </form>
     </div>
   </div>
@@ -61,6 +77,7 @@ export default {
       age_ed: "",
     };
   },
+  props: ["auth_type"],
 
   computed: {
     validation: function () {
@@ -92,14 +109,16 @@ export default {
         .post("/api/history", data2, config)
         .then((res) => {
           console.log("成功 ");
-          console.log(res);
+          //console.log(res);
           this.$router.push({ name: "task.list" });
+          //this.$router.push({ name: "task.list",hash: '#adminHistorys' });
         })
         .catch(function (error) {
           console.log("失敗");
-          console.log(error);
+          //console.log(error);
         });
     },
+
   },
 };
 </script>

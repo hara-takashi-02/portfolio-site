@@ -4,23 +4,22 @@
 
     <div class="c-form">
       <form v-on:submit.prevent="submit">
-
-          <div class="c-radio">
-            <p>TYPE</p>
-            <label for="1">
-              <input type="radio" id="1" v-model="type" value="0" />
-              <span>MAIN</span>
-            </label>
-            <label for="2">
-              <input type="radio" id="2" v-model="type" value="1" />
-              <span>SUB</span>
-            </label>
-          </div>
+        <div class="c-radio">
+          <p>TYPE</p>
+          <label for="1">
+            <input type="radio" id="1" v-model="type" value="0" />
+            <span>MAIN</span>
+          </label>
+          <label for="2">
+            <input type="radio" id="2" v-model="type" value="1" />
+            <span>SUB</span>
+          </label>
+        </div>
 
         <div class="c-input">
           <label for="title" class="">
             <p>TITLE</p>
-            <input type="text" class="" id="title" v-model="title" />
+            <input required type="text" class="" id="title" v-model="title" />
           </label>
         </div>
 
@@ -46,10 +45,13 @@
         </div>
 
         <p v-if="validation" class="error">{{ validation }}</p>
-        <button v-if="!validation" type="submit" class="c-btn c-btn--submit">
+        <button v-if="auth_type != 0" class="c-btn c-btn--submit" disabled>
+          show only
+        </button>
+        <button v-else-if="validation" class="c-btn c-btn--submit" disabled>
           SUBMIT
         </button>
-
+        <button v-else-if="!validation" type="submit" class="c-btn c-btn--submit">SUBMIT</button>
       </form>
     </div>
   </div>
@@ -66,6 +68,7 @@ export default {
       free_txt: "",
     };
   },
+  props: ["auth_type"],
 
   computed: {
     validation: function () {
@@ -93,11 +96,11 @@ export default {
       let data2 = new FormData();
       data2.append("title", this.title);
       data2.append("type", this.type);
-      if(this.type == 0){
-      data2.append("content", this.content);
-      data2.append("file_name", this.file);
-      }else{
-      data2.append("free_txt", this.free_txt);
+      if (this.type == 0) {
+        data2.append("content", this.content);
+        data2.append("file_name", this.file);
+      } else {
+        data2.append("free_txt", this.free_txt);
       }
 
       let config = {
@@ -109,12 +112,12 @@ export default {
         .post("/api/work", data2, config)
         .then((res) => {
           console.log("成功 ");
-          console.log(res);
+          //console.log(res);
           this.$router.push({ name: "task.list" });
         })
         .catch(function (error) {
           console.log("失敗");
-          console.log(error);
+          //console.log(error);
         });
     },
   },

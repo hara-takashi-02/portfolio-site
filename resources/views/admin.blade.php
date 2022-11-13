@@ -9,12 +9,12 @@ home本体
 <main class="l-main">
 
 <!--<header-component></header-component>-->
-<router-view></router-view>
-<router-view name="works"></router-view>
-<router-view name="skills"></router-view>
-<router-view name="products"></router-view>
-<router-view name="profiles"></router-view>
-<router-view name="historys"></router-view>
+<router-view auth_type="{{$auth_type}}"></router-view>
+<router-view name="works" auth_type="{{$auth_type}}"></router-view>
+<router-view name="skills" auth_type="{{$auth_type}}"></router-view>
+<router-view name="products" auth_type="{{$auth_type}}"></router-view>
+<router-view name="profiles" auth_type="{{$auth_type}}"></router-view>
+<router-view name="historys" auth_type="{{$auth_type}}"></router-view>
 </main>
 @endsection
 @include('admin_layouts.footer', [])

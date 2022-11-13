@@ -159,7 +159,7 @@ $(function () {
       if (scroll >= elemPos - windowheight) {
         $(this).addClass('is-anime');
       } else {
-        $(this).removeClass('is-anime');
+        //$(this).removeClass('is-anime');
       }
     });
   }

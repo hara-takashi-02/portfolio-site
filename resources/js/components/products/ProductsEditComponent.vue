@@ -1,6 +1,5 @@
 <template>
   <div class="c-widset c-section">
-
     <div class="c-section--head"><h2 class="c-title">PRODUCT</h2></div>
 
     <div class="c-form">
@@ -44,14 +43,13 @@
         </div>
 
         <p v-if="validation" class="error">{{ validation }}</p>
-        <button
-          v-if="!validation"
-          type="submit"
-          class="c-btn c-btn--submit"
-          @click="displayUpdate(product)"
-        >
+        <button v-if="auth_type != 0" class="c-btn c-btn--submit" disabled>
+          show only
+        </button>
+        <button v-else-if="validation" class="c-btn c-btn--submit" disabled>
           SUBMIT
         </button>
+        <button @click="displayUpdate(product)" v-else-if="!validation" type="submit" class="c-btn c-btn--submit">SUBMIT</button>
       </form>
     </div>
   </div>
@@ -61,6 +59,7 @@
 export default {
   props: {
     productId: [String, Number],
+    auth_type: [],
   },
 
   data: function () {
@@ -88,12 +87,12 @@ export default {
         .then((res) => {
           this.product = res.data;
           console.log("成功 ");
-          console.log(res);
+          //console.log(res);
           this.loading = false; //ロード終了
         })
         .catch(function (error) {
           console.log("失敗");
-          console.log(error);
+          //console.log(error);
         });
     },
 
@@ -122,12 +121,12 @@ export default {
         .post("/api/product/" + this.productId, data2, config)
         .then((res) => {
           console.log("成功 ");
-          console.log(res);
+          //console.log(res);
           this.$router.push({ name: "task.list" });
         })
         .catch(function (error) {
           console.log("失敗");
-          console.log(error);
+          //console.log(error);
         });
     },
   },

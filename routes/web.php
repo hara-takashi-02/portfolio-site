@@ -22,8 +22,10 @@ use App\Http\Controllers\AllController;
 //Route::get('/', [WorksController::class, 'showsite'])->name('work.showsite');
 
 Route::get('/', [AllController::class, 'showsite']);
+//Route::get('/home', [AllController::class, 'showAdmin']);
 
-Route::get('/home/', function() {
+Route::get('/home/', [AllController::class, 'showAdmin'], function() {
+//Route::get('/home/', function() {
     if (Auth::check()) {
     return view('admin');
     }else{
@@ -31,7 +33,8 @@ Route::get('/home/', function() {
     }
 })->where('home', '.*');
 
-Route::get('/home/{any}', function() {
+Route::get('/home/{any}', [AllController::class, 'showAdmin'], function() {
+//Route::get('/home/{any}', function() {
     if (Auth::check()) {
     return view('admin');
     }else{

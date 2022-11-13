@@ -22,6 +22,12 @@ class WorksController extends Controller
     public function index() //一覧用
     {
         $work_index = Works::orderBy('sort', 'asc')->get();
+        //$user = Auth::check();
+        //return $work_index;
+        //$user = auth()->user();
+        //$user = session()->get('str');
+        //var_dump($user);
+
         return $work_index;
     }
 
@@ -92,8 +98,9 @@ class WorksController extends Controller
     {
         //$user = Auth::user()->type;
         //$user = Auth::check();
-        $user = auth()->user();
-        var_dump($user);
+        //$user = auth()->user();
+        //$user = session()->get('str');
+        //var_dump($user);
         //$user = 0;
 
         //if($user == 0){
@@ -111,4 +118,5 @@ class WorksController extends Controller
             return;
         //}
     }
+    
 }
