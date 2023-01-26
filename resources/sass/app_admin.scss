@@ -2009,6 +2009,9 @@ admin
     color: #000;
     margin-bottom: 0;
     white-space: pre-wrap;
+    &:nth-of-type(2){
+        white-space: initial;
+    }
 
     .noimg {
         display: flex;

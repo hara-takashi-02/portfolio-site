@@ -154,8 +154,8 @@ site本体
                         @endif
                     </dt>
                     <dd>
-                        age.{{$history->age_st}}~{{$history->age_ed}}<br>
-                        {{$history->content}}
+                        <p>age.{{$history->age_st}}~{{$history->age_ed}}</p>
+                        <p class="txt">{{$history->content}}</p>
                     </dd>
                 </dl>
                 @endforeach
